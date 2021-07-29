@@ -1,0 +1,36 @@
+version: "3.9"
+    
+services:
+  db_diamonds:
+    image: mysql:5.7.35
+    volumes:
+      - db_diamonds_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_diamonds
+      MYSQL_USER: avibarouch@gmail.com
+      MYSQL_PASSWORD: nhsg2021
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+  diamonds:
+    depends_on:
+      - db_diamonds
+    image: jbpr:01.01
+    volumes:
+      - data_diamonds:/var/www/html
+    ports:
+      - "5000:5000"
+    restart: always
+    environment:
+      JBPR_DB_HOST: db:3306
+      JBPR_DB_USER: admin
+      JBPR_DB_PASSWORD: admin
+      JBPR_DB_NAME: admin
+volumes:
+  db_diamonds_data: {}
+  data_diamonds: {}

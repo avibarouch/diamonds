@@ -1,0 +1,12 @@
+__pycache__*
+.pytest_cache
+.vscode*
+*.ipynb
+env
+readme.txt
+README.md
+key
+key.pub
+Dockerfile_forcast.txt
+Dockerfile_collector
+pytest*

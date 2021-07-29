@@ -1,0 +1,40 @@
+{% extends 'main.html' %} 
+
+{% block content %}
+<form style="margin-left: 5%;margin-right: 5%;" action="/predict" method="POST">
+  <div class="mb-3">
+    <label for="carat" class="form-label">Carat</label>
+    <input type="text" class="form-control" id="carat" name="carat">
+  </div>
+  <div class="mb-3">
+    <label for="cut" class="form-label">Cut</label>
+    <input type="text" class="form-control" id="cut" name="cut">
+  </div>
+  <div class="mb-3">
+    <label for="Color" class="form-label">Color</label>
+    <input type="text" class="form-control" id="color" name="color">
+  </div>
+  <div class="mb-3">
+    <label for="clarity" class="form-label">Clarity</label>
+    <input type="text" class="form-control" id="clarity" name="clarity">
+  </div>
+  <div class="mb-3">
+    <label for="depth" class="form-label">Depth</label>
+    <input type="text" class="form-control" id="depth" name="depth">
+  </div>
+  <div class="mb-3">
+    <label for="x" class="form-label">X</label>
+    <input type="text" class="form-control" id="x" name="x">
+  </div>
+  <div class="mb-3">
+    <label for="y" class="form-label">Y</label>
+    <input type="text" class="form-control" id="y" name="y">
+  </div>
+  <div class="mb-3">
+    <label for="z" class="form-label">Z</label>
+    <input type="text" class="form-control" id="Z" name="z">
+  </div>
+    
+  <button type="submit" class="btn btn-primary">Predict</button>
+</form>
+{% endblock %} 
