@@ -79,8 +79,8 @@ df5.drop(["x", "y"], axis=1, inplace=True)
 # Adding back the "drop_col" columns:
 # df5 = pd.concat([df5, df4], axis=1, join="inner")
 # https://www.aqua-calc.com/calculate/weight-to-volume
-# Make categoric data - numeric (get_dummy, fit_transform):
 
+# Make categoric data - numeric (fit_transform or get_dummy):
 label_cut = LabelEncoder()
 label_color = LabelEncoder()
 label_clarity = LabelEncoder()
