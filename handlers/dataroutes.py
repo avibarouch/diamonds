@@ -2,7 +2,7 @@ from flask import request, render_template
 import json
 import pandas as pd
 import pickle
-
+import handlers.buildmodel
 flag = 0
 df = None
 
@@ -80,3 +80,17 @@ def configure(app):
         v = model.predict([ls])
 
         return render_template('res.html', val=v)
+
+    @app.route('/buildmodel')
+    def build_a_model():
+        print("Start build The model")
+        handlers.buildmodel.build_it()
+        print("End build The model")
+        # flash('Process complete!')
+        return render_template('buildmodel.html')
+
+    @app.route('/fetch_data')
+    def improve_model():
+        print("Hello World")
+        flash('Process complete!')
+        return render_template('admin.html')

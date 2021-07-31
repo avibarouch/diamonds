@@ -8,6 +8,8 @@ handlers/__pycache__
 key*
 data/install_db.log
 data/modeldata
+model.pkl
+
 # All other section dow heare
 
 # Byte-compiled / optimized / DLL files
