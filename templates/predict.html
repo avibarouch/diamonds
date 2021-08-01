@@ -1,42 +1,134 @@
 {% extends 'main.html' %} 
 
 {% block content %}
-<form style="margin-left: 5%;margin-right: 5%;" action="/predict" method="POST">
+
+<script type="text/javascript">
+// Checks numerical values according to (exist, min, max)
+  function checkValue(varName, inputVal, minValue, maxVal)
+  {
+    echo("Hello")
+    if(isNaN(inputVal))
+    {
+      document.write("Warning: ambiguous " + varName + " value");
+      return False
+    }
+    else
+    {
+      if(inputVal < minValue && inputVal > maxVal)
+      {
+        document.write("Warning: check " + varName + "'s value");
+      }
+    }
+    return True
+  }
+  // Checks string values according to (exist, categories)
+  function checkStr(varName, inputVal, categories)
+  {
+    for (let i = 0; i = length(categories); i++)
+      if(inputVal.toLowerCase() == categories[i].toLowerCase())
+      {
+        return True
+      }
+    document.write("Warning: Not such " + varName + " category");
+    return False
+  }
+  var features = ["carat", "cut", "color", "clarity", "table", "depth", "x", "y", "z" ]
+  var answers = ["False", "False", "False", "False", "False", "False", "False", "False", "False"]
+
+  // Returns user to the first wrong input
+  function checkAll(features, answers)
+  {
+    echo("Hello")
+    for (let i = 0; i = length(answers); i++)
+    {
+      if(!answers[i])
+      {
+        document.getElementById(features[i]).focus();
+        break;
+      }
+    }
+  }
+</script>
+
+
+<form style="margin-left: 5%;margin-right: 5%;" 
+    
+    action="/predict" method="POST">
   <div class="mb-3">
     <label for="carat" class="form-label">Carat</label>
-    <input type="text" class="form-control" id="carat" name="carat">
+    <input type="text" onclick="checkAll(features, answers)" 
+      class="form-control" id="carat" name="carat">
+    <script type="text/javascript">
+      var carat = document.getElementById("carat")
+      answers[0] = checkValue(name, carat, 0, 10)
+    </script>
   </div>
   <div class="mb-3">
     <label for="cut" class="form-label">Cut</label>
     <input type="text" class="form-control" id="cut" name="cut">
+    <script type="text/javascript">
+      var cut = document.getElementById("cut")
+      cut_categories = ["Good", "Very Good", "Premium", "Ideal"]
+      answers[1] = checkStr(name, cut, cut_categories)
+    </script>
   </div>
   <div class="mb-3">
     <label for="Color" class="form-label">Color</label>
     <input type="text" class="form-control" id="color" name="color">
+    <script type="text/javascript">
+      var color = document.getElementById("color")
+      color_categories = ["A", "B", "C", "D", "E", "F"]
+      answers[2] = checkStr(name, color, color_categories)
+    </script>
   </div>
   <div class="mb-3">
     <label for="clarity" class="form-label">Clarity</label>
     <input type="text" class="form-control" id="clarity" name="clarity">
+    <script type="text/javascript">
+      var clarity = document.getElementById("clarity")
+      clarity_categories = ["C1", "C2", "C3", "C4", "C5"]
+      answers[3] = checkStr(name, clarity, clarity_categories)
+    </script>
   </div>
   <div class="mb-3">
     <label for="table" class="form-label">Table</label>
     <input type="text" class="form-control" id="table" name="table">
+    <script type="text/javascript">
+      var table = document.getElementById("table")
+      answers[4] = checkValue(name, table, 30, 100)
+    </script>
   </div>  
   <div class="mb-3">
     <label for="depth" class="form-label">Depth</label>
     <input type="text" class="form-control" id="depth" name="depth">
+    <script type="text/javascript">
+      var depth = document.getElementById("depth")
+      answers[5] = checkValue(name, depth, 0, 10)
+    </script>
   </div>
   <div class="mb-3">
     <label for="x" class="form-label">X</label>
     <input type="text" class="form-control" id="x" name="x">
+    <script type="text/javascript">
+      var x = document.getElementById("x")
+      answers[6] = checkValue(name, x, 0, 10)
+    </script>
   </div>
   <div class="mb-3">
     <label for="y" class="form-label">Y</label>
     <input type="text" class="form-control" id="y" name="y">
+    <script type="text/javascript">
+      var y = document.getElementById("y")
+      answers[7] = checkValue(name, y, 0, 10)
+    </script>
   </div>
   <div class="mb-3">
     <label for="z" class="form-label">Z</label>
     <input type="text" class="form-control" id="Z" name="z">
+    <script type="text/javascript">
+      var z = document.getElementById("z")
+      answers[8] = checkValue(name, z, 0, 10)
+    </script>
   </div>
     
   <button type="submit" class="btn btn-primary">Predict</button>
