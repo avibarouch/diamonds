@@ -66,18 +66,28 @@ def configure(app):
         color = request.form['color']
         clarity = request.form['clarity']
         depth = request.form['depth']
+        table = request.form['table']
         x = request.form['x']
         y = request.form['y']
         z = request.form['z']
 
         # Open The model
-        f = open('./data/modeldata', 'rb')
+        f = open('model.pkl', 'rb')
         model = pickle.load(f)
         f.close()
 
-        ls = [carat, cut, color, clarity, depth, x, y, z]
+        ls = [carat, table, depth, x, y, z]
+        index = 50000
+        # carat = 0.23
+        # depth = 61.5
+        # table = 55.0
+        # x = 3.95
+        # y = 3.98
+        # z = 2.43
 
-        v = model.predict([ls])
+        rs = [index, carat, table, depth, x, y, z]
+
+        v = model.predict([rs])
 
         return render_template('res.html', val=v)
 
