@@ -21,4 +21,10 @@ B.  In order to run this project on your machine:
     3. Change directory to where the project lives  
     4. Execute this command: docker build . -t proj:70  
     5. Execute this command: docker run -p 5000:5000 proj:70  
-    6. Access http://localhost:5000 via browser  
+    6. Access http://localhost:5000 via browser
+
+c.  The project is running a database service with Docker.
+    To work with the database natively:
+    1.  Install on your mashine Docker Desktop and Docker Compose
+    2.  From the terminall (where The yml file live) run: docker compose up
+    3.  To be continue...
