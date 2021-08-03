@@ -6,6 +6,21 @@ import numpy as np
 import pandas as pd
 import pickle
 
+d_cut = {'Ideal': 1, 'Premium': 2, 'Very Good': 3, 'Good': 4, 'Fair': 5}
+d_color = {'G': 1, 'E': 2, 'F': 3, 'H': 4, 'D': 5, 'I': 6, 'J': 7}
+d_clarity = {'SI1': 1, 'VS2': 2, 'SI2': 3, 'VS1': 4, 'VVS2': 5, 'VVS1': 6, \
+             'IF': 7, 'I1': 8}
+
+def cut_code(key_val):
+  return d_cut[key_val]
+
+def color_code(key_val):
+  return d_color[key_val]
+
+def clarity_code(key_val):
+  return d_clarity[key_val]
+
+
 
 def build_a_model():
     df = pd.read_csv("data/diamond.csv")
