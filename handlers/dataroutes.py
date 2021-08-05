@@ -3,6 +3,9 @@ import json
 import pandas as pd
 import pickle
 import handlers.buildmodel
+from database import dp_db_install
+# import database.dp_db_connectivity_check
+
 flag = 0
 df = None
 
@@ -101,6 +104,19 @@ def configure(app):
 
     @app.route('/fetch_data')
     def improve_model():
-        print("Hello World")
-        flash('Process complete!')
+        print("Hello from dataroutes.py")
+        # flash('Process complete!')
         return render_template('admin.html')
+
+    @app.route('/database/dp_db_install')
+    def install():
+        print("Hello from dp_db_install on dataroutes.py")
+        # flash('Process complete!')
+        dp_db_install.start()
+        return render_template('admin.html')
+#   @app.route('/database/dp_db_creation')
+#   def dp_db_creation():
+#       print("Hello from connectivity_check on dataroutes.py")
+#       # flash('Process complete!')
+#       database.dp_db_creation.create_database(cursor)
+#       return render_template('admin.html')
