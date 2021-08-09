@@ -1,14 +1,5 @@
-# The important section of this file
-__pycache__
-.vscode
-launch.json
-env
-handlers/__pycache__
-*.csv
-key*
-data/install_db.log
-data/modeldata
-model.pkl
+# The DIAMOND  PROJECT is the most important
+# section of this file is on the botom of the file
 
 # All other section dow heare
 
@@ -150,3 +141,16 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# The DIAMOND  PROJECT
+__pycache__
+.vscode
+launch.json
+env
+handlers/__pycache__
+*.csv
+key*
+data/install_db.log
+data/modeldata
+model.pkl
+model_rf.pkl
