@@ -8,8 +8,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_diamonds
-      MYSQL_USER: avibarouch@gmail.com
+      MYSQL_DATABASE: dp_diamonds
+      MYSQL_USER: user1
       MYSQL_PASSWORD: nhsg2021
     ports:
       # <Port exposed> : < MySQL Port running inside container>

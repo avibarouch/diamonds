@@ -1,10 +1,10 @@
-import database.dp_db_insert
+# import database.dp_db_insert
 from flask import request, render_template
 import json
 import pandas as pd
 import pickle
 import handlers.buildmodel
-# import database.dp_db_install
+import database.dp_db_install
 import dp_db_install
 # import database.dp_db_connectivity_check
 flag = 0
@@ -137,10 +137,11 @@ def configure(app):
     @app.route('/database/dp_db_install')
     def dp_install():
         init_df()
-        database.dp_db_settings.dp_initial_globals()
+#        database.dp_db_settings.dp_initial_globals()
         print("Hello from dp_install on dataroutes.py")
+        database.dp_db_install.start()
         # flash('Process complete!')
-        database.dp_db_settings.dp_db_install.start()
+#        database.dp_db_settings.dp_db_install.start()
         return ('', 204)
 #   @app.route('/database/dp_db_creation')
 #   def dp_db_creation():
@@ -149,12 +150,12 @@ def configure(app):
 #       database.dp_db_creation.create_database(cursor)
 #       return render_template('admin.html')
 
-    @app.route('/database/dp_db_drop+install')
+    @app.route('/database/dp_db_drop')
     def dp_install_drop():
         print("Hello from dp_install_drop on dataroutes.py")
         # flash('Process complete!')
         init_df()
-        dp_db_install.start(drop=1)
+        database.dp_db_install.start(drop=True)
         return('', 204)
 
     @app.route('/database/dp_db_insert')

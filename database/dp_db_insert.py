@@ -1,7 +1,9 @@
 # from __future__ import print_function
 # from datetime import date, datetime, timedelta
+from mysql.connector import errorcode
 import mysql.connector
 import dp_db_connection
+import csv
 
 
 def dp_diamond():
@@ -18,6 +20,9 @@ def dp_diamond():
     else:
         cursor = cnx.cursor()
         print("Connection for db_user is established with no errors!")
+
+    cursor.close()
+    cnx.close()
 
     # # this form of sending values (%s) is problematic
     # add_diamond = ("INSERT INTO `dp_diamonds` "
@@ -40,40 +45,24 @@ def dp_diamond():
     # # insert new diamond
     # cursor.execute(add_somthing, data_diamond)
 
-    add_diamond = ("INSERT INTO `diamonds` "
-                   "(`carat`, `cut`, `color`, `clarity`,"
-                   " `depth`, `table1`, `x`, `y`, `z`) "
-                   "VALUES (4.2, 'Good', 'D', 'IF', 4.2,"
-                   " 3.87, 2.4, 4.54, 7.87)")
-
-    # insert new diamond
-    try:
-        cursor.execute(add_diamond)
-    except mysql.connector.Error as err:
-        if ((err.errno == errorcode.ER_TABLE_EXISTS_ERROR)
-                or (err.errno == 1050)):
-            print("Pleas Install the dalabase first")
-        else:
-            print(err.msg)
-    else:
-        print("SUCCESS")
-
-    # Make sure data is committed to the database
-    cnx.commit()
-
-# ToDo
-#    f = open('data/diamonds.csv', newline='')
-#    f1 = csv.reader(f, delimiter=',')
-#    for row in f1:
-#        print(',  '.join(row))
-#    csvfile = open('data/diamonds.csv')
-#    head_line = csvfile.readline().strip("\n")
-#    key = head_line.split(",")
-#    csvfile.__next__()
-#    for line in csvfile:
-#        line = line.strip('\n')
-#        val = line.split(",")
-#        dic[key] = val
-
-    cursor.close()
-    cnx.close()
+# This try was *succssesfull*
+#    add_diamond = ("INSERT INTO `diamonds` "
+#                   "(`carat`, `cut`, `color`, `clarity`,"
+#                   " `depth`, `table1 `, `x`, `y`, `z`) "
+#                   "VALUES (4.2, 'Good', 'D', 'IF', 4.2,"
+#                   " 3.87, 2.4, 4.54, 7.87)")
+#
+#    # insert new diamond with *success*
+#    try:
+#        cursor.execute(add_diamond)
+#    except mysql.connector.Error as err:
+#        if ((err.errno == errorcode.ER_TABLE_EXISTS_ERROR)
+#                or (err.errno == 1050)):
+#            print("Pleas Install the dalabase first")
+#        else:
+#            print(err.msg)
+#    else:
+#        # Make sure data is committed to the database
+#        cnx.commit()
+#
+#        print("Insert data with SUCCESS")
