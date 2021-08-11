@@ -152,5 +152,7 @@ handlers/__pycache__
 key*
 data/install_db.log
 data/modeldata
-model.pkl
-model_rf.pkl
+data/diamonds-01.xlsx
+data/diamonds.json
+data/diamonds-01.json
+*.pkl
