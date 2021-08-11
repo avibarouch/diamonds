@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
-import csv
+
+
 # On this file:
 # 1.    make a connection to the database
 # 2.    Create a database (if it isn't exist)
@@ -9,9 +10,11 @@ import csv
 DB_NAME = "dp_diamonds"
 
 
-def drop():
-    for arg in kwargs:
-        return arg[drop]
+# def drop(drop,kwargs):
+#    for arg in kwarg:
+#        if (kwarg[arg] in {drop=1}):
+#            return 1
+#    return 0
 
 
 def drop_database(cursor):
@@ -20,30 +23,27 @@ def drop_database(cursor):
         print("Success droping the database")
     except mysql.connector.Error as err:
         print("Failed droping the database: {}".format(err))
-        exit(1)
 
 
 def create_database(cursor):
     try:
-        # cursor.execute("DROP DATABASE {} ".format(DB_NAME))
         cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
-        exit(1)
 
 
-def start(**kwarg):
+def start(drop=0, **kwargs):
     # ToDo: good practic is to put this config object in a diffrent file
-    #       and name it config.ini. This is because it probebly will serv 
+    #       and name it config.ini. This is because it probebly will serv
     #       other modules
     config = {
         'user': 'root',
         'password': 'root5464^%$GHFD&^*nbvn',
         'host': 'localhost',
-        'raise_on_warnings': 'True',
-    }
 
+    }
+#         'raise_on_warnings': 'True',
     try:
         cnx = mysql.connector.connect(**config)
     except mysql.connector.Error as err:
@@ -57,9 +57,9 @@ def start(**kwarg):
         cursor = cnx.cursor()
         print("Connection for db_user is established with no errors!")
 
-    if (cursor) & (drop()):
-        create_database(cursor)
-    if (cursor) and not drop():
+    if (cursor) and (drop):
+        drop_database(cursor)
+    if (cursor) and not drop:
         print("Begin instalation proccess:")
         try:
             cursor.execute("USE {}".format(DB_NAME))
@@ -73,17 +73,17 @@ def start(**kwarg):
                 print(err)
                 exit(1)
         finally:
-            print("Database is exist!")
+            print("Database is rady!")
 
         TABLES = {}
         TABLES['diamonds'] = (
             "CREATE TABLE `diamonds` ("
-            "  `insert_date` DATE DEFAULT GETDATE(),"
+            "  `time_stamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
             "  `num` INT(10),"
             "  `carat` DECIMAL(8,2),"
             "  `cut` VARCHAR(32),"
             "  `color` enum('D','E','F','G','H','I','J'),"
-            "  `clarity` enum('I1','IF','SI1','SI2','VS1'"
+            "  `clarity` enum('I1','IF','SI1','SI2','VS1',"
             "  'VS2','VVS1','VVS2'),"
             "  `depth` float(6,2),"
             "  `table1` float(6,2),"
@@ -91,7 +91,7 @@ def start(**kwarg):
             "  `x` float(6,2),"
             "  `y` float(6,2),"
             "  `z` float(6,2),"
-            "  PRIMARY KEY (`date`, `num`)"
+            "  PRIMARY KEY (`time_stamp`, `num`)"
             ") ENGINE=InnoDB")
 
         for table_name in TABLES:

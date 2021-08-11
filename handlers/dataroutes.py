@@ -5,7 +5,7 @@ import pandas as pd
 import pickle
 import handlers.buildmodel
 import database.dp_db_install
-import dp_db_install
+
 # import database.dp_db_connectivity_check
 flag = 0
 df = None
@@ -151,15 +151,15 @@ def configure(app):
 #       return render_template('admin.html')
 
     @app.route('/database/dp_db_drop')
-    def dp_install_drop():
+    def dp_db_drop():
         print("Hello from dp_install_drop on dataroutes.py")
         # flash('Process complete!')
         init_df()
-        database.dp_db_install.start(drop=True)
+        database.dp_db_install.start(drop=1)
         return('', 204)
 
     @app.route('/database/dp_db_insert')
-    def dp_insert():
+    def dp_db_insert():
         print("Hello from dp_insert on dataroutes.py")
         database.dp_db_insert.dp_diamond()
         return('', 204)
