@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
+from flask import *
 
 
 # On this file:
@@ -10,19 +11,13 @@ from mysql.connector import errorcode
 DB_NAME = "dp_diamonds"
 
 
-# def drop(drop,kwargs):
-#    for arg in kwarg:
-#        if (kwarg[arg] in {drop=1}):
-#            return 1
-#    return 0
-
-
 def drop_database(cursor):
     try:
         cursor.execute("DROP DATABASE {} ".format(DB_NAME))
-        print("Success droping the database")
     except mysql.connector.Error as err:
-        print("Failed droping the database: {}".format(err))
+        return 0
+    else:
+        return 1
 
 
 def create_database(cursor):
@@ -30,7 +25,9 @@ def create_database(cursor):
         cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
     except mysql.connector.Error as err:
-        print("Failed creating database: {}".format(err))
+        return 0
+    else:
+        return 1
 
 
 def start(drop=0, **kwargs):
@@ -44,36 +41,42 @@ def start(drop=0, **kwargs):
 
     }
 #         'raise_on_warnings': 'True',
+
     try:
         cnx = mysql.connector.connect(**config)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
+            flash("Something is wrong with your user name or password")
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+            flash("Database does not exist")
         else:
-            print(err)
+            flash(err)
     else:
         cursor = cnx.cursor()
-        print("Connection for db_user is established with no errors!")
+        flash("Connection for db_user is established with no errors!")
 
     if (cursor) and (drop):
-        drop_database(cursor)
+        if drop_database(cursor):
+            flash("Database droped")
+        else:
+            flash("Failed droping the database: {}".format(DB_NAME))
     if (cursor) and not drop:
-        print("Begin instalation proccess:")
         try:
             cursor.execute("USE {}".format(DB_NAME))
         except mysql.connector.Error as err:
-            print("Database {} does not exists.".format(DB_NAME))
+            flash("Database {} does not exists.".format(DB_NAME))
             if err.errno == errorcode.ER_BAD_DB_ERROR:
-                create_database(cursor)
-                print("Database {} created successfully.".format(DB_NAME))
+                if create_database(cursor):
+                    flash("Database {} created successfully."
+                          .format(DB_NAME))
+                else:
+                    flash("Database {} not created successfully."
+                          .format(DB_NAME))
                 cnx.database = DB_NAME
             else:
-                print(err)
-                exit(1)
-        finally:
-            print("Database is rady!")
+                flash(err)
+        else:
+            flash("Database Exist and redy")
 
         TABLES = {}
         TABLES['diamonds'] = (
@@ -97,15 +100,15 @@ def start(drop=0, **kwargs):
         for table_name in TABLES:
             table_description = TABLES[table_name]
             try:
-                print("Try to creat table {}: ".format(table_name), end='')
+                flash("Try to creat table {}: ".format(table_name))
                 cursor.execute(table_description)
             except mysql.connector.Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    print("but it's already exists.")
+                    flash("   but it's already exists.")
                 else:
-                    print(err.msg)
+                    flash(err.msg)
             else:
-                print("SUCCESS")
+                flash("   SUCCESS")
 
     cursor.close()
     cnx.close()

@@ -1,7 +1,17 @@
 {% extends 'main.html' %} 
 
 {% block content %}
-<div style="color: blue;">Admin</div></h2>
+<h1>Admin</h1>
+
+<p>{% with messages = get_flashed_messages() %}  
+    {% if messages %}  
+          {% for message in messages %}  
+               <br/>{{ message }}
+          {% endfor %}  
+    {% endif %}  
+{% endwith %}  </p>
+
+
 <a href="/database/dp_db_install">Database install</a><br/>
 <a href="/database/dp_db_drop">Database drop (All data will be lost, use if neccery)</a><br/>
 <!--<a href="/database/dp_db_insert">Insert data to database()</a><br/>-->

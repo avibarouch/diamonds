@@ -20,6 +20,7 @@ def dp_diamond():
     else:
         cursor = cnx.cursor()
         print("Connection for db_user is established with no errors!")
+        flash("Connection for db_user is established with no errors!")
 
     cursor.close()
     cnx.close()

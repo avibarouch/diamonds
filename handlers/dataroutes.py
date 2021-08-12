@@ -1,5 +1,5 @@
 # import database.dp_db_insert
-from flask import request, render_template
+from flask import *  # request, render_template
 import json
 import pandas as pd
 import pickle
@@ -137,12 +137,11 @@ def configure(app):
     @app.route('/database/dp_db_install')
     def dp_install():
         init_df()
-#        database.dp_db_settings.dp_initial_globals()
-        print("Hello from dp_install on dataroutes.py")
+        flash("Begin of Installation process")
         database.dp_db_install.start()
-        # flash('Process complete!')
-#        database.dp_db_settings.dp_db_install.start()
-        return ('', 204)
+        flash('End of Installation process')
+        return render_template("admin.html")
+
 #   @app.route('/database/dp_db_creation')
 #   def dp_db_creation():
 #       print("Hello from connectivity_check on dataroutes.py")
@@ -152,14 +151,14 @@ def configure(app):
 
     @app.route('/database/dp_db_drop')
     def dp_db_drop():
-        print("Hello from dp_install_drop on dataroutes.py")
-        # flash('Process complete!')
-        init_df()
+        flash("Begin of Droping process")
         database.dp_db_install.start(drop=1)
-        return('', 204)
+        flash('End of Droping process')
+        return render_template("admin.html")
 
     @app.route('/database/dp_db_insert')
     def dp_db_insert():
         print("Hello from dp_insert on dataroutes.py")
+        flash("Hello from dp_insert on dataroutes.py")
         database.dp_db_insert.dp_diamond()
-        return('', 204)
+        return("/admin", 204)
