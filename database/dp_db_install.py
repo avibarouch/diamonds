@@ -1,19 +1,60 @@
 import mysql.connector
 from mysql.connector import errorcode
 from flask import *
+import csv
+import sys
+csv_file = "diamonds.csv"
+db_name = "diamonds"
 
 
-# On this file:
-# 1.    make a connection to the database
-# 2.    Create a database (if it isn't exist)
-# 3.    Create a table (if it isn't exist)
-# 4.    insert diamonds data (53K lines) to data base
-DB_NAME = "dp_diamonds"
+def file_exist_test(file):
+    # This is a test of te existence of a file
+    # Get a name and relativ path to the file
+    # Return 1 if the file was found
+    try:
+        flash("Try to find a csv file")
+        open(csv_file)
+    except OSError as err:
+        flash("OS error, Pleas check if the file exist")
+        return 0
+    else:
+        flash("The file was founded")
+        return 1
+
+
+def insert_data(cursor, cnx):
+    # The wanted result on the first faze is a string like below
+    #   on the next faze we try to insert it to the table
+    #   INSERT INTO `diamonds` (`num`,`carat`,`cut`,`color`,
+    #   `clarity`,`depth`,`table1`,`price`,`x`,`y`,`z`) VALUES (2,
+    #   0.21,"Premium","E","SI1", 59.8,61,326,3.89,3.84,2.31)
+    inserted_sucssesfuly = 0
+    i = 0
+    with open(csv_file, newline='') as file:
+        diamond_reader = csv.reader(file)
+        for line in diamond_reader:
+            if i >= 1:
+                v = line  # For values
+                sql = "INSERT INTO `diamonds` (`num`,`carat`,`cut`,`color`"
+                sql += ",`clarity`,`depth`,`table1`,`price`,`x`,`y`,`z`) "
+                sql += ("VALUES ({},{},").format(v[0], v[1])
+                sql += ('"'+'{}'+'",').format(v[2])
+                sql += ('"'+'{}'+'",').format(v[3])
+                sql += ('"'+'{}'+'",').format(v[4])
+                sql += "{},{},{},{},{},{})".format(v[5], v[6], v[7], v[8],
+                                                   v[9], v[10])
+                try:
+                    cursor.execute(sql)
+                    inserted_sucssesfuly += 1
+                except:
+                    flash(v[0])
+            i += 1
+    return inserted_sucssesfuly
 
 
 def drop_database(cursor):
     try:
-        cursor.execute("DROP DATABASE {} ".format(DB_NAME))
+        cursor.execute("DROP DATABASE {} ".format(db_name))
     except mysql.connector.Error as err:
         return 0
     else:
@@ -23,7 +64,7 @@ def drop_database(cursor):
 def create_database(cursor):
     try:
         cursor.execute(
-            "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+            "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(db_name))
     except mysql.connector.Error as err:
         return 0
     else:
@@ -38,9 +79,8 @@ def start(drop=0, **kwargs):
         'user': 'root',
         'password': 'root5464^%$GHFD&^*nbvn',
         'host': 'localhost',
-
+        'autocommit': 'True',
     }
-#         'raise_on_warnings': 'True',
 
     try:
         cnx = mysql.connector.connect(**config)
@@ -59,20 +99,20 @@ def start(drop=0, **kwargs):
         if drop_database(cursor):
             flash("Database droped")
         else:
-            flash("Failed droping the database: {}".format(DB_NAME))
+            flash("Database is not Exist: {}".format(db_name))
     if (cursor) and not drop:
         try:
-            cursor.execute("USE {}".format(DB_NAME))
+            cursor.execute("USE {}".format(db_name))
         except mysql.connector.Error as err:
-            flash("Database {} does not exists.".format(DB_NAME))
+            flash("Database {} does not exists.".format(db_name))
             if err.errno == errorcode.ER_BAD_DB_ERROR:
                 if create_database(cursor):
                     flash("Database {} created successfully."
-                          .format(DB_NAME))
+                          .format(db_name))
                 else:
                     flash("Database {} not created successfully."
-                          .format(DB_NAME))
-                cnx.database = DB_NAME
+                          .format(db_name))
+                cnx.database = db_name
             else:
                 flash(err)
         else:
@@ -104,11 +144,14 @@ def start(drop=0, **kwargs):
                 cursor.execute(table_description)
             except mysql.connector.Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    flash("   but it's already exists.")
+                    flash("Table already exists.")
                 else:
                     flash(err.msg)
             else:
-                flash("   SUCCESS")
-
+                flash("Table was created")
+    if cursor and not drop and file_exist_test(csv_file) :
+        inserted_sucssesfuly = insert_data(cursor, cnx)
+        flash("Number of inserted sucssesfuly diaminds is: {} "
+              .format(inserted_sucssesfuly))
     cursor.close()
     cnx.close()

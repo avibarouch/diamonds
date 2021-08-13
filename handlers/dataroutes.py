@@ -128,26 +128,19 @@ def configure(app):
         # flash('Process complete!')
         return render_template('buildmodel.html')
 
-    @app.route('/fetch_data')
+    @app.route('/insert_data')
     def improve_model():
-        print("Hello from improve_model on dataroutes.py")
-        # flash('Process complete!')
+        flash("Begin of insert new data")
+        database.dp_db_install.start()
+        flash('End of insert new data')
         return render_template('admin.html')
 
     @app.route('/database/dp_db_install')
     def dp_install():
-        init_df()
         flash("Begin of Installation process")
         database.dp_db_install.start()
         flash('End of Installation process')
         return render_template("admin.html")
-
-#   @app.route('/database/dp_db_creation')
-#   def dp_db_creation():
-#       print("Hello from connectivity_check on dataroutes.py")
-#       # flash('Process complete!')
-#       database.dp_db_creation.create_database(cursor)
-#       return render_template('admin.html')
 
     @app.route('/database/dp_db_drop')
     def dp_db_drop():
@@ -158,7 +151,8 @@ def configure(app):
 
     @app.route('/database/dp_db_insert')
     def dp_db_insert():
-        print("Hello from dp_insert on dataroutes.py")
-        flash("Hello from dp_insert on dataroutes.py")
-        database.dp_db_insert.dp_diamond()
+        flash("The instalation process can take some time.")
+        render_template(admin.html)
+        database.dp_db_insert.dp_diamond(drop=0)
+        flash("Thank you for you'r paition")
         return("/admin", 204)
