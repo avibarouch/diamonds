@@ -3,7 +3,7 @@ from mysql.connector import errorcode
 from flask import *
 import csv
 import sys
-import dp_functions
+
 csv_file = "diamonds.csv"
 db_name = "diamonds"
 

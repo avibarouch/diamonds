@@ -7,39 +7,35 @@ from wtforms.validators import ValidationError
 
 
 class Addnwew_form(FlaskForm):
-    carat = DecimalField('Diamond carat',
-                         validators=[DataRequired(u"This field"
-                                                  " have hige ability to "
-                                                  "predict the price, "
-                                                  "about 60 percent. so "
-                                                  " carat is a mandatory "
-                                                  "field")])
-    cut = SelectField(u'Diamond cut',
-                      validators=[DataRequired(u"Cut has about 30 precent"
-                                               "of theability to predict "
-                                               "the price. so this is a "
-                                               "mandatory field",)],
-                      choices=[('Ideal', 'Ideal'), ('Premium',
-                               'Premium'), ('Very Good', 'Very Good'),
-                               ('Good', 'Good'), ('Fair', 'Fair')])
-
-    color = SelectField(u'Diamond color', choices=[('G', 'G'), ('E', 'E'),
-                                                   ('F', 'F'), ('H', 'H'),
-                                                   ('D', 'D'),
-                                                   ('I', 'I'), ('J', 'J')])
-    clarity = SelectField(u'Diamond clarity', choices=[('SI1', 'SI1'),
-                          ('VS2', 'VS2'), ('SI2', 'SI2'), ('VS1', 'VS1'),
-                          ('WS2', 'WS2'), ('WS1', 'WS1'), ('IF', 'IF'),
-                          ('I1', 'I1')])
-    depth = DecimalField('Diamond depth')
-    table1 = DecimalField('Diamond table')
-    x = DecimalField('Diamond x')
-    y = DecimalField('Diamond y')
-    z = DecimalField('Diamond z')
-    price = IntegerField('Diamond price',
-                         validators=[DataRequired(u"This  field have "
-                                                  "vary importent to "
-                                                  "machine lerning, "
-                                                  "so price is a "
-                                                  "mandatory field")])
-    submit = SubmitField('Add This diamond')
+    carat = DecimalField(u"Diamonds Carat has about 60 precent of the ability "
+                         u"to predict the price. so this is a mandatory field",
+                         validators=[DataRequired()])
+    cut = SelectField(u"Diamonds Cut has about 30 precent of theability "
+                      u"to predict the price. so this is a mandatory field",
+                      validators=[DataRequired()],
+                      choices=[(u'Ideal', u'Ideal'), (u'Premium',
+                               u'Premium'), (u'Very Good', u'Very Good'),
+                               (u'Good', u'Good'), (u'Fair', u'Fair')])
+    color = SelectField(u'Diamonds Color',
+                        choices=[(u'G', u'G'), (u'E', u'E'),
+                                 (u'F', u'F'), (u'H', u'H'), (u'D', u'D'),
+                                 (u'I', u'I'), (u'J', u'J')])
+    clarity = SelectField(u'Diamonds Clarity', choices=[(u'SI1', u'SI1'),
+                          (u'VS2', u'VS2'), (u'SI2', u'SI2'), (u'VS1', u'VS1'),
+                          (u'WS2', u'WS2'), (u'WS1', u'WS1'),  (u'IF', u'IF'),
+                          (u'I1', u'I1')])
+    depth = DecimalField(u'Diamonds Depth', validators=[DataRequired(u"If"
+                         " a decimal value is unknown pleas insert -1")])
+    table1 = DecimalField(u'Diamonds Table', validators=[DataRequired(u"If"
+                          " a decimal value is unknown pleas insert -1")])
+    x = DecimalField(u'Diamonds X', validators=[DataRequired(u"If a decimal"
+                     " value is unknown pleas insert -1")])
+    y = DecimalField(u'Diamonds Y', validators=[DataRequired(u"If a decimal "
+                     "value is unknown pleas insert -1")])
+    z = DecimalField(u'Diamonds Z', validators=[DataRequired(u"If a decimal "
+                     "value is unknown pleas insert -1")])
+    price = IntegerField(u"Diamonds Price have top importance to this work"
+                         u" spacialy and Machine Lerning the main subject "
+                         u"so Price also is a mandatory field",
+                         validators=[DataRequired()])
+    submit = SubmitField(u'Add This diamond')

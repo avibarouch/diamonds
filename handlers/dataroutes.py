@@ -7,6 +7,7 @@ import handlers.buildmodel
 import database.dp_db_install
 import dp_forms
 
+
 # import database.dp_db_connectivity_check
 flag = 0
 df = None
@@ -30,8 +31,11 @@ def configure(app):
     def addnew():
         form = dp_forms.Addnwew_form()
         if form.validate_on_submit():
-            flash('jhgjhgjhg')
-            return redirect('addnew.html')
+            # ToDo: flash this messese in green color
+            flash('Got your diamond data. Thank you: '
+                  'carat={}, cut={}, price={} ...'
+                  .format(form.carat.data, form.cut.data, form.price.data))
+            return redirect('/addnew')
         return render_template('addnew.html', form=form)
 
     @app.route('/database/dp_db_install')
