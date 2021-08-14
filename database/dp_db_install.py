@@ -3,8 +3,13 @@ from mysql.connector import errorcode
 from flask import *
 import csv
 import sys
+import dp_functions
 csv_file = "diamonds.csv"
 db_name = "diamonds"
+
+
+def request_clean_data(diamond):
+    diamond[num] = strip(request(num), "'")
 
 
 def file_exist_test(file):
@@ -22,7 +27,7 @@ def file_exist_test(file):
         return 1
 
 
-def insert_data(cursor, cnx):
+def insert_data(cursor):
     # The wanted result on the first faze is a string like below
     #   on the next faze we try to insert it to the table
     #   INSERT INTO `diamonds` (`num`,`carat`,`cut`,`color`,
@@ -71,7 +76,7 @@ def create_database(cursor):
         return 1
 
 
-def start(drop=0, **kwargs):
+def start(drop=0, addnew=0, **kwargs):
     # ToDo: good practic is to put this config object in a diffrent file
     #       and name it config.ini. This is because it probebly will serv
     #       other modules
@@ -149,9 +154,15 @@ def start(drop=0, **kwargs):
                     flash(err.msg)
             else:
                 flash("Table was created")
-    if cursor and not drop and file_exist_test(csv_file) :
-        inserted_sucssesfuly = insert_data(cursor, cnx)
-        flash("Number of inserted sucssesfuly diaminds is: {} "
+    if cursor and not drop and file_exist_test(csv_file):
+        inserted_sucssesfuly = insert_data(cursor)
+        flash("Number of inserted sucssesfuly diamonds is: {} "
               .format(inserted_sucssesfuly))
+    if cursor and addnew:
+        diamond = {}
+        request_clean_data(diamond)
+        create_csv_file()
+        insert_new_diamond(cursor)
+
     cursor.close()
     cnx.close()
