@@ -5,6 +5,7 @@ import pandas as pd
 import pickle
 import handlers.buildmodel
 import database.dp_db_install
+import dp_forms
 
 # import database.dp_db_connectivity_check
 flag = 0
@@ -20,15 +21,40 @@ def init_df():
 
 
 def configure(app):
+    #    @app.route('/request_addnew')
+    #    def request_addnew():
+    #        database.functions.request_addnew()
+    #        return render_template('/request_addnew')
+
+    @app.route('/addnew', methods=['GET', 'POST'])
+    def addnew():
+        form = dp_forms.Addnwew_form()
+        if form.validate_on_submit():
+            flash('jhgjhgjhg')
+            return redirect('addnew.html')
+        return render_template('addnew.html', form=form)
+
+    @app.route('/database/dp_db_install')
+    def dp_install():
+        flash("The insert process can take some time.")
+        render_template(admin.html)
+        database.dp_db_install.start()
+        flash("Thank you for you'r paition")
+        return render_template("admin.html")
+
+    @app.route('/database/dp_db_drop')
+    def dp_db_drop():
+        flash("Begin of Droping process")
+        database.dp_db_install.start(drop=1)
+        flash('End of Droping process')
+        return render_template("admin.html")
+
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     @app.route('/')
     def hello_world():
         global df
         init_df()
         return render_template('main.html', data=df)
-
-    @app.route('/addnew')
-    def add_new():
-        return render_template('addnew.html')
 
     @app.route('/predict')
     def predict():
@@ -135,24 +161,7 @@ def configure(app):
         flash('End of insert new data')
         return render_template('admin.html')
 
-    @app.route('/database/dp_db_install')
-    def dp_install():
-        flash("Begin of Installation process")
-        database.dp_db_install.start()
-        flash('End of Installation process')
-        return render_template("admin.html")
-
-    @app.route('/database/dp_db_drop')
-    def dp_db_drop():
-        flash("Begin of Droping process")
-        database.dp_db_install.start(drop=1)
-        flash('End of Droping process')
-        return render_template("admin.html")
-
     @app.route('/database/dp_db_insert')
     def dp_db_insert():
-        flash("The instalation process can take some time.")
-        render_template(admin.html)
         database.dp_db_insert.dp_diamond(drop=0)
-        flash("Thank you for you'r paition")
         return("/admin", 204)
