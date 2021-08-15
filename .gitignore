@@ -156,3 +156,5 @@ data/diamonds-01.xlsx
 data/diamonds.json
 data/diamonds-01.json
 *.pkl
+model_rf_v1
+model_rf.pkl_01

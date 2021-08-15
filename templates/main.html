@@ -34,6 +34,15 @@
       </li>
     </ul>
   </nav>
+  <hr>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  
   {% block content %}
   <h1>List:</h1>
   <table class="table" style="text-align: center;">
