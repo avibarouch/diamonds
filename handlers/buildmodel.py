@@ -375,80 +375,80 @@ def make_pickle(model_name, pickle_name, path):
     with open(path + pickle_name, 'wb') as f:
         pickle.dump(model_name, f)
 
+def data_prep():
+    ##################################################################
+    # ################# Start of data preparation ################## #
+    ##################################################################
 
-##################################################################
-# ################# Start of data preparation ################## #
-##################################################################
+    # Original data-base:
+    df = pd.read_csv("data/diamond.csv")
+    df = df.drop('Unnamed: 0', axis=1)
 
-# Original data-base:
-df = pd.read_csv("data/diamond.csv")
-df = df.drop('Unnamed: 0', axis=1)
+    # Finding non-numerical feature (list):
+    alpha_col = non_num_col(df)
 
-# Finding non-numerical feature (list):
-alpha_col = non_num_col(df)
+    # Replaces all space only or special charater values with NaN
+    df.replace(r'^\s*$', np.nan, regex=True)
 
-# Replaces all space only or special charater values with NaN
-df.replace(r'^\s*$', np.nan, regex=True)
+    # Finding unwanted rows (beyond repair, known condition):
+    # (Specific to project)
+    z00_indexes = []
+    z00_indexes.append(df_query(df, ["x", "y"], ["<"],  [0.1, 0.1]))
+    z00_indexes.append(df_query(df, ["y", "z"], ["<"],  [0.1, 0.1]))
+    z00_indexes.append(df_query(df, ["z", "x"], ["<"],  [0.1, 0.1]))
+    z00_indexes = set(list2D1D(z00_indexes))
 
-# Finding unwanted rows (beyond repair, known condition):
-# (Specific to project)
-z00_indexes = []
-z00_indexes.append(df_query(df, ["x", "y"], ["<"],  [0.1, 0.1]))
-z00_indexes.append(df_query(df, ["y", "z"], ["<"],  [0.1, 0.1]))
-z00_indexes.append(df_query(df, ["z", "x"], ["<"],  [0.1, 0.1]))
-z00_indexes = set(list2D1D(z00_indexes))
+    # Cleaning 'z00' unwanted rows:
+    df1 = df.drop(axis=0, index=z00_indexes)
 
-# Cleaning 'z00' unwanted rows:
-df1 = df.drop(axis=0, index=z00_indexes)
+    # Convert non-numerical columns (alpha_col) to numeric
+    # 'alpha_encode' and 'alpha_decode' are translation dictionaries
+    (df2, alpha_encode, alpha_decode) = num_code(df1, alpha_col)
 
-# Convert non-numerical columns (alpha_col) to numeric
-# 'alpha_encode' and 'alpha_decode' are translation dictionaries
-(df2, alpha_encode, alpha_decode) = num_code(df1, alpha_col)
+    # Replacing all spaces and special characters in df2 - with NaN:
+    df3 = df2.replace(r'^\s*$', np.nan, regex=True)
 
-# Replacing all spaces and special characters in df2 - with NaN:
-df3 = df2.replace(r'^\s*$', np.nan, regex=True)
+    # Finds number of missing cells in each column (dFrame - alternative example)
+    dic = missing_per_column(df2)
 
-# Finds number of missing cells in each column (dFrame - alternative example)
-dic = missing_per_column(df2)
+    # All these lists of columns are used in finding missing values:
+    cols_del_rows, cols_to_repair, cols_full = separate_cols(dic, 3)
+    # print(f"In columns: {cols_del_rows} delete rows having missing values")
+    # print(f"Columns to complete: {cols_to_repair}")
+    # print(f"Full columns: {cols_full}")
 
-# All these lists of columns are used in finding missing values:
-cols_del_rows, cols_to_repair, cols_full = separate_cols(dic, 3)
-# print(f"In columns: {cols_del_rows} delete rows having missing values")
-# print(f"Columns to complete: {cols_to_repair}")
-# print(f"Full columns: {cols_full}")
+    # Drop rows in 'cols_del_rows' having None or NaN values
+    df3 = df2.dropna(axis=1, subset=cols_del_rows)
 
-# Drop rows in 'cols_del_rows' having None or NaN values
-df3 = df2.dropna(axis=1, subset=cols_del_rows)
+    # Repair columns with missing or wrong value:
+    for col in cols_to_repair:
+        df3 = repair_col(df3, col, min_cond=0.1, dec_num_precision=3)
 
-# Repair columns with missing or wrong value:
-for col in cols_to_repair:
-    df3 = repair_col(df3, col, min_cond=0.1, dec_num_precision=3)
+    # Find (weird) rows with far-off values (n*std)
+    d_weird_rows = weird_rows(df3, alpha_col, sig_num=6)
+    weird_indexes = set(d_weird_rows.values())
 
-# Find (weird) rows with far-off values (n*std)
-d_weird_rows = weird_rows(df3, alpha_col, sig_num=6)
-weird_indexes = set(d_weird_rows.values())
+    # Cleaning weird_rows:
+    df4 = df3.drop(axis=0, index=weird_indexes)
+    print(f"How much we drop: {len(weird_indexes)}/{len(df3)}")
 
-# Cleaning weird_rows:
-df4 = df3.drop(axis=0, index=weird_indexes)
-print(f"How much we drop: {len(weird_indexes)}/{len(df3)}")
+    # Changing 'x', 'y' columns to 'area', 'form'
+    # (Specific to project)
+    df5 = diamond_xy(df4)
 
-# Changing 'x', 'y' columns to 'area', 'form'
-# (Specific to project)
-df5 = diamond_xy(df4)
+    # Dropping columns which have little corelation with the price
+    drop_col = corr_drop(df5, "price", 0.5)
+    # print(drop_col)   # 0.2 to 0.8 : ['depth', 'table', 'form']
+    df6 = df5.drop(drop_col, axis=1)
 
-# Dropping columns which have little corelation with the price
-drop_col = corr_drop(df5, "price", 0.5)
-# print(drop_col)   # 0.2 to 0.8 : ['depth', 'table', 'form']
-df6 = df5.drop(drop_col, axis=1)
+    ##################################################################
+    # ################## End of data preparation ################### #
+    ##################################################################
 
-##################################################################
-# ################## End of data preparation ################### #
-##################################################################
+    # Applying a machine learning model for "price" column:
+    model_rf, x_test, y_test = rf(df6, "price", mytest_size=0.15)
+    # y_predict = model_rf.predict(x_test)
+    # print_scores(x_test, y_test, y_predict)
 
-# Applying a machine learning model for "price" column:
-model_rf, x_test, y_test = rf(df6, "price", mytest_size=0.15)
-# y_predict = model_rf.predict(x_test)
-# print_scores(x_test, y_test, y_predict)
-
-# Makes pickle file (model_rf.pkl):
-make_pickle(model_rf, "model_rf.pkl", "")
+    # Makes pickle file (model_rf.pkl):
+    make_pickle(model_rf, "model_rf.pkl", "")

@@ -1,70 +1,74 @@
 {% extends 'main.html' %} 
 
 {% block content %}
-<form style="margin-left: 5%;margin-right: 5%;" action="/predict" method="POST">
-  <div class="mb-3">
-    <label for="carat" class="form-label">Carat</label>
-    <input placeholder="Hi" type="text" class="form-control" id="carat" name="carat" required>
-  </div>
-  <div class="mb-3">
-    <label for="cut" class="form-label">Cut</label>
-    <select type="text" class="form-control" id="cut" name="cut">
-<!--<option value = "Ideal">Please choose an option</option>-->
-      <option value = "Ideal">Ideal</option>
-      <option value = "Premium">Premium</option>
-      <option value = "Very Good">Very Good</option>
-      <option value = "Good">Good</option>
-      <option value = "Fair">Fair</option>
-    </select>  
-  </div>
-  <div class="mb-3">
-    <label for="Color" class="form-label">Color</label>
-    <select type="text" class="form-control" id="color" name="color">
-<!--<option value = "G">Please choose an option</option>-->
-      <option value = "G">G</option>
-      <option value = "E">E</option>
-      <option value = "F">F</option>
-      <option value = "H">H</option>
-      <option value = "D">D</option>
-      <option value = "I">I</option>
-      <option value = "J">J</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="clarity" class="form-label">Clarity</label>
-    <select type="text" class="form-control" id="clarity" name="clarity">
-<!--<option value = "SI1">Please choose an option</option>-->      
-      <option value = "SI1">SI1</option>
-      <option value = "VS2">VS2</option>
-      <option value = "SI2">SI2</option>
-      <option value = "VS1">VS1</option>
-      <option value = "VVS2">VVS2</option>
-      <option value = "VVS1">VVS1</option>
-      <option value = "IF">IF</option>
-      <option value = "I1">I1</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="table" class="form-label">Table</label>
-    <input type="text" class="form-control" id="table" name="table">
-  </div>  
-  <div class="mb-3">
-    <label for="depth" class="form-label">Depth</label>
-    <input type="text" class="form-control" id="depth" name="depth">
-  </div>
-  <div class="mb-3">
-    <label for="x" class="form-label">X</label>
-    <input type="text" class="form-control" id="x" name="x">
-  </div>
-  <div class="mb-3">
-    <label for="y" class="form-label">Y</label>
-    <input type="text" class="form-control" id="y" name="y">
-  </div>
-  <div class="mb-3">
-    <label for="z" class="form-label">Z</label>
-    <input type="text" class="form-control" id="Z" name="z">
-  </div>
-    
-  <button type="submit" class="btn btn-primary">Predict</button>
-</form>
+<h1>Predict diamond price</h1>
+<hr>
+<form action="" method="post" novalidate>
+  {{ form.csrf_token }}
+  <p>
+    {{ form.carat.label }}<br>
+    {{ form.carat(size=32) }}<br>
+    {% for error in form.carat.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.cut.label }}<br>
+    {{ form.cut() }}<br>
+    {% for error in form.cut.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.color.label }}<br>
+    {{ form.color() }}<br>
+    {% for error in form.color.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.clarity.label }}<br>
+    {{ form.clarity() }}<br>
+    {% for error in form.clarity.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.depth.label }}<br>
+    {{ form.depth(size=32) }}<br>
+    {% for error in form.depth.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.table1.label }}<br>
+    {{ form.table1(size=32) }}<br>
+    {% for error in form.table1.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.x.label }}<br>
+    {{ form.x(size=32) }}<br>
+    {% for error in form.x.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.y.label }}<br>
+    {{ form.y(size=32) }}<br>
+    {% for error in form.y.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.z.label }}<br>
+    {{ form.z(size=32) }}<br>
+    {% for error in form.z.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit }}<br>
+</form>  
+  
 {% endblock %} 
