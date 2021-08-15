@@ -3,13 +3,6 @@
 {% block content %}
 <h1>Add new diamond</h1>
 <hr>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
 {% endif %}
 {% endwith %}
 <form action="" method="post" novalidate>

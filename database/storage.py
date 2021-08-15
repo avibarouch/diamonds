@@ -1,7 +1,8 @@
+# ToDo: use with this file to connect MySQL
 import configparser
 import MySQLdb.cursors
 # import mysql.connector
-# This is a separate, easy to use, connection to My SQL handling functions
+# This is a separate, easy to use, connection to MySQL handling functions
 # ToDo: This file is not usable yet. Make it usable on the next version
 config = configparser.ConfigParser()
 config

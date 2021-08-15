@@ -8,10 +8,6 @@ csv_file = "diamonds.csv"
 db_name = "diamonds"
 
 
-def request_clean_data(diamond):
-    diamond[num] = strip(request(num), "'")
-
-
 def file_exist_test(file):
     # This is a test of te existence of a file
     # Get a name and relativ path to the file
@@ -51,8 +47,11 @@ def insert_data(cursor):
                 try:
                     cursor.execute(sql)
                     inserted_sucssesfuly += 1
-                except:
-                    flash(v[0])
+                except err.errno == mysql.connector.Error as err:
+                    # ToDo print to log file all the diamonds that was
+                    # not inserted to table
+                    print("Something went wrong: {}".format(err))
+                    print("the index numer of th row is: {}".format(v[0]))
             i += 1
     return inserted_sucssesfuly
 
@@ -160,9 +159,6 @@ def start(drop=0, addnew=0, **kwargs):
               .format(inserted_sucssesfuly))
     if cursor and addnew:
         diamond = {}
-        request_clean_data(diamond)
-        create_csv_file()
-        insert_new_diamond(cursor)
 
     cursor.close()
     cnx.close()
