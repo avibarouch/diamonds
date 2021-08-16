@@ -375,6 +375,7 @@ def make_pickle(model_name, pickle_name, path):
     with open(path + pickle_name, 'wb') as f:
         pickle.dump(model_name, f)
 
+
 def data_prep():
     ##################################################################
     # ################# Start of data preparation ################## #
@@ -408,7 +409,8 @@ def data_prep():
     # Replacing all spaces and special characters in df2 - with NaN:
     df3 = df2.replace(r'^\s*$', np.nan, regex=True)
 
-    # Finds number of missing cells in each column (dFrame - alternative example)
+    # Finds number of missing cells in each column (dFrame -
+    # alternative example)
     dic = missing_per_column(df2)
 
     # All these lists of columns are used in finding missing values:
@@ -441,10 +443,13 @@ def data_prep():
     # print(drop_col)   # 0.2 to 0.8 : ['depth', 'table', 'form']
     df6 = df5.drop(drop_col, axis=1)
 
+    return df6
+
     ##################################################################
     # ################## End of data preparation ################### #
     ##################################################################
-
+def build_it():
+    df6 = data_prep()
     # Applying a machine learning model for "price" column:
     model_rf, x_test, y_test = rf(df6, "price", mytest_size=0.15)
     # y_predict = model_rf.predict(x_test)

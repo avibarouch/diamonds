@@ -3,11 +3,12 @@ from flask import *  # request, render_template
 import json
 import pandas as pd
 import pickle
-import handlers.buildmodel
+import handlers.dp_buildmodel
 import database.dp_db_install
 import dp_forms
 import database.dp_db_insert
-import program.dp_predict
+import handlers.dp_predict
+import dp_db_insert
 
 
 # import database.dp_db_connectivity_check
@@ -25,27 +26,38 @@ def init_df():
 
 def configure(app):
 
+    @app.route('/details/<int:id>')
+    def getdetails(id):
+        global df
+        print("Hello from predict_item on dataroutes.py")
+        return render_template('details.html', item=df.iloc[id])
+
+    @app.route('/res')
+    def dp_res():
+        return render_template("res.html")
+
+
     @app.route('/predict', methods=['GET', 'POST'])
     def predict():
-        form = dp_forms.Addnwew_form()
+        form = dp_forms.Predict_form()
         if form.validate_on_submit():
             # ToDo: flash this messese in green color
             flash('Got your data. '
                   'carat={}, cut={} and so on ... Thank you!'
                   .format(form.carat.data, form.cut.data))
             diamond = {}
-            diamond['carat'] = form.carat.data
+            diamond['carat'] = float(form.carat.data)
             diamond['cut'] = form.cut.data
             diamond['color'] = form.color.data
             diamond['clarity'] = form.clarity.data
-            diamond['depth'] = form.depth.data
-            diamond['table'] = form.table1.data
-            diamond['x'] = form.x.data
-            diamond['y'] = form.y.data
-            diamond['z'] = form.z.data
-            program.dp_predict.diamond_price(diamond)
-            return redirect('/res')
-        return render_template('addnew.html', form=form)
+            diamond['depth'] = float(form.depth.data)
+            diamond['table'] = float(form.table1.data)
+            diamond['x'] = float(form.x.data)
+            diamond['y'] = float(form.y.data)
+            diamond['z'] = float(form.z.data)
+            price = handlers.dp_predict.diamond_price(diamond)
+            return render_template('res.html', price=price)
+        return render_template('predict.html', form=form)
 
     @app.route('/addnew', methods=['GET', 'POST'])
     def addnew():
@@ -99,12 +111,6 @@ def configure(app):
     @app.route('/admin')
     def admin():
         return render_template('admin.html')
-
-    @app.route('/details/<int:id>')
-    def getdetails(id):
-        global df
-        print("Hello from predict_item on dataroutes.py")
-        return render_template('details.html', item=df.iloc[id])
 
     @app.route('/additem', methods=['POST'])
     def add_item():
@@ -184,10 +190,9 @@ def configure(app):
 
     @app.route('/buildmodel')
     def build_a_model():
-        print("Hello from build_a_model on dataroutes.py")
-        handlers.buildmodel.build_it()
-        print("End build The model")
-        # flash('Process complete!')
+        flash("Start Build a model")
+        handlers.dp_buildmodel.build_it()
+        flash("End build The model")
         return render_template('buildmodel.html')
 
     @app.route('/insert_data')
