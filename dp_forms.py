@@ -40,6 +40,7 @@ class Addnwew_form(FlaskForm):
                          validators=[DataRequired()])
     submit = SubmitField(u'Add This diamond')
 
+
 class Predict_form(FlaskForm):
     carat = DecimalField(u"Diamonds Carat has about 60 precent of the ability "
                          u"to predict the price. so this is a mandatory field",
@@ -56,8 +57,8 @@ class Predict_form(FlaskForm):
                                  (u'I', u'I'), (u'J', u'J')])
     clarity = SelectField(u'Diamonds Clarity', choices=[(u'SI1', u'SI1'),
                           (u'VS2', u'VS2'), (u'SI2', u'SI2'), (u'VS1', u'VS1'),
-                          (u'VVS2', u'VVS2'), (u'VVS1', u'VVS1'),  (u'IF', u'IF'),
-                          (u'I1', u'I1')])
+                          (u'VVS2', u'VVS2'), (u'VVS1', u'VVS1'),
+                          (u'IF', u'IF'), (u'I1', u'I1')])
     depth = DecimalField(u'Diamonds Depth', validators=[DataRequired(u"If"
                          " a decimal value is unknown pleas insert -1")])
     table1 = DecimalField(u'Diamonds Table', validators=[DataRequired(u"If"

@@ -10,8 +10,6 @@ import database.dp_db_insert
 import handlers.dp_predict
 import dp_db_insert
 
-
-# import database.dp_db_connectivity_check
 flag = 0
 df = None
 
@@ -35,7 +33,6 @@ def configure(app):
     @app.route('/res')
     def dp_res():
         return render_template("res.html")
-
 
     @app.route('/predict', methods=['GET', 'POST'])
     def predict():
@@ -97,16 +94,11 @@ def configure(app):
         flash('End of Droping process')
         return render_template("admin.html")
 
-# &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     @app.route('/')
     def hello_world():
         global df
         init_df()
         return render_template('main.html', data=df)
-
-#    @app.route('/predict')
-#    def predict():
-#        return render_template('predict.html')
 
     @app.route('/admin')
     def admin():
@@ -125,68 +117,7 @@ def configure(app):
         y = float(request.form['y'])
         z = float(request.form['z'])
         price = request.form['price']
-
-        # df.loc[df.index.size] = [carat, cut, color, clarity,
-        #                         depth, x, y, z, price]
-        # Data frame to CSV file
-        # df.to_csv('./data/diamond.csv', index=False)
         return render_template('ok.html')
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    @app.route('/predict', methods=['POST'])
-    def predict_item():
-        global df
-        print("Hello from predict_item on dataroutes.py")
-#        carat = request.form['carat']
-#        cut = request.form['cut']
-#        color = request.form['color']
-#        clarity = request.form['clarity']
-#        depth = float(request.form['depth'])
-#        table = float(request.form['table'])
-#        x = float(request.form['x'])
-#        y = float(request.form['y'])
-#        z = float(request.form['z'])
-
-        # Open The model
-        f = open('model_rf.pkl', 'rb')
-        model_rf = pickle.load(f)
-        f.close()
-
-        ls = ["carat", "table", "depth", "x", "y", "z"]
-        carat = 0.23
-        cut = 1
-        color = 2
-        clarity = 3
-        z = 2.43
-        area = 12.347
-
-        rs2 = [carat, cut, color, clarity, z, area]
-
-        d_cut = {'Ideal': 1, 'Premium': 2, 'Very Good': 3,
-                 'Good': 4, 'Fair': 5}
-#        d_color = {'G': 1, 'E': 2, 'F': 3, 'H': 4, 'D': 5,
-#                   'I': 6, 'J': 7}
-#        d_clarity = {'SI1': 1, 'VS2': 2, 'SI2': 3, 'VS1': 4, 'VVS2': 5,
-#                     'VVS1': 6, 'IF': 7, 'I1': 8}
-#
-#        def cut_code(key_val):
-#            return d_cut[key_val]
-#
-#        def color_code(key_val):
-#            return d_color[key_val]
-#
-#        def clarity_code(key_val):
-#            return d_clarity[key_val]
-#
-#        cut = cut_code(cut)
-#        color = color_code(color)
-#        clarity = clarity_code(clarity)
-#        rs = [carat, cut, color, clarity, depth, table, x, y, z]
-
-        v = model_rf.predict([rs2])
-
-        return render_template('res.html', val=v)
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     @app.route('/buildmodel')
     def build_a_model():
